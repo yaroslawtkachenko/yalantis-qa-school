@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { useFormik } from 'formik';
@@ -7,13 +7,14 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import MenuItem from '@material-ui/core/MenuItem';
-import uniqueId from 'lodash/uniqueId';
+import { v1 as uuidv1 } from 'uuid';
 
 import defaultUsers from '../../constants/defaultUsers';
 import { TaskTypeEnum } from '../../constants/taskType';
-import { Priority } from '../../constants/taskPriority';
+import { Priority, PriorityNames } from '../../constants/taskPriority';
 import { Status } from '../../constants/taskStatus';
 import initialModalValues from './initialModalValues';
+import { TaskContext } from '../../hooks/useTasks';
 
 interface Props {
     children: React.ReactNode;
@@ -26,6 +27,7 @@ interface Props {
         priority: TaskPriority;
         status: TaskStatus;
         estimate: number | undefined;
+        id: string;
     };
     isEdit?: boolean;
 }
@@ -89,22 +91,23 @@ const TaskModal: React.FC<Props> = ({
 }) => {
     const classes = useStyles();
 
+    const { handleCreateTask, handleUpdateTask } = useContext(TaskContext);
+
     const formik = useFormik({
         validateOnChange: true,
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: (values, { resetForm }) => {
-            alert(
-                JSON.stringify(
-                    {
-                        ...values,
-                        estimate: values?.estimate || 100,
-                        id: uniqueId(),
-                    },
-                    null,
-                    2,
-                ),
-            );
+            const task = {
+                ...values,
+                estimate: values?.estimate || 100,
+                id: isEdit ? initialValues?.id : uuidv1(),
+            };
+            if (isEdit) {
+                handleUpdateTask(task);
+            } else {
+                handleCreateTask(task);
+            }
             handleClose();
             resetForm();
         },
@@ -245,10 +248,10 @@ const TaskModal: React.FC<Props> = ({
                                     className={classes.field}
                                     disabled={isEdit}
                                 >
-                                    <MenuItem value={Priority.low}>{Priority.low}</MenuItem>
-                                    <MenuItem value={Priority.medium}>{Priority.medium}</MenuItem>
-                                    <MenuItem value={Priority.high}>{Priority.high}</MenuItem>
-                                    <MenuItem value={Priority.critical}>{Priority.critical}</MenuItem>
+                                    <MenuItem value={Priority.low}>{PriorityNames[Priority.low]}</MenuItem>
+                                    <MenuItem value={Priority.medium}>{PriorityNames[Priority.medium]}</MenuItem>
+                                    <MenuItem value={Priority.high}>{PriorityNames[Priority.high]}</MenuItem>
+                                    <MenuItem value={Priority.critical}>{PriorityNames[Priority.critical]}</MenuItem>
                                 </TextField>
                                 <div className={classes.buttonWrap}>
                                     <Button

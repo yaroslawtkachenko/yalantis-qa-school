@@ -19,19 +19,19 @@ const Board: React.FC = () => {
     return (
         <Grid justifyContent="center" container spacing={0} classes={{ container: classes.container }}>
             <Grid item xs>
-                <TaskStatusColumn status={Status.toDo} tasks={[]} />
+                <TaskStatusColumn status={Status.toDo} />
             </Grid>
             <Grid item xs>
-                <TaskStatusColumn status={Status.inProgress} tasks={[]} />
+                <TaskStatusColumn status={Status.inProgress} />
             </Grid>
             <Grid item xs>
-                <TaskStatusColumn status={Status.testing} tasks={[]} />
+                <TaskStatusColumn status={Status.testing} />
             </Grid>
             <Grid item xs>
-                <TaskStatusColumn status={Status.reopened} tasks={[]} />
+                <TaskStatusColumn status={Status.reopened} />
             </Grid>
             <Grid item xs>
-                <TaskStatusColumn status={Status.done} tasks={[]} />
+                <TaskStatusColumn status={Status.done} />
             </Grid>
         </Grid>
     );

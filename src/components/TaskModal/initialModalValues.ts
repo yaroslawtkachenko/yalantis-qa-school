@@ -10,6 +10,7 @@ const initialModalValues = {
     priority: Priority.medium,
     status: Status.toDo,
     estimate: undefined,
+    id: '',
 };
 
 export default initialModalValues;

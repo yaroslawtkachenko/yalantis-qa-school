@@ -4,6 +4,8 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import Board from '../containers/Board';
 import Header from '../containers/Header';
+import Filters from '../containers/Filters';
+import useTasks, { TaskContext } from '../hooks/useTasks';
 
 const theme = createTheme({
     palette: {
@@ -17,12 +19,43 @@ const theme = createTheme({
 });
 
 const App: React.FC = () => {
+    const {
+        handleSetCurrentFilter,
+        handleDeleteTask,
+        handleUpdateTask,
+        handleResetState,
+        handleCreateTask,
+        handleSortTask,
+        currentFilter,
+        setFilterBy,
+        filterBy,
+        sortBy,
+        tasks,
+    } = useTasks();
+
     return (
         <ThemeProvider theme={theme}>
-            <div className="App">
-                <Header />
-                <Board />
-            </div>
+            <TaskContext.Provider
+                value={{
+                    handleSetCurrentFilter,
+                    handleDeleteTask,
+                    handleUpdateTask,
+                    handleResetState,
+                    handleCreateTask,
+                    handleSortTask,
+                    currentFilter,
+                    setFilterBy,
+                    filterBy,
+                    sortBy,
+                    tasks,
+                }}
+            >
+                <div className="App">
+                    <Header />
+                    <Filters />
+                    <Board />
+                </div>
+            </TaskContext.Provider>
         </ThemeProvider>
     );
 };

@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import cn from 'classnames';
+import orderBy from 'lodash/orderBy';
+
+import Card from '../Card';
+import { TaskContext } from '../../hooks/useTasks';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,23 +30,41 @@ const useStyles = makeStyles((theme: Theme) =>
             textAlign: 'left',
             letterSpacing: '1px',
         },
+        cardWrap: {
+            marginBottom: '20px',
+            '&:last-child': {
+                marginBottom: '0',
+            },
+        },
     }),
 );
 
 interface Props {
     status: TaskStatus;
-    tasks: Task[] | [];
 }
 
-const TaskStatusColumn: React.FC<Props> = ({ status, tasks }) => {
+const TaskStatusColumn: React.FC<Props> = ({ status }) => {
     const classes = useStyles();
+
+    const { tasks, sortBy } = useContext(TaskContext);
+
+    const tasksByStatus = useMemo((): Task[] | [] => {
+        const filteredTask = tasks.filter((task) => task.status === status);
+        return orderBy(filteredTask, sortBy, ['desc']);
+    }, [status, tasks, sortBy]);
 
     return (
         <div className={classes.root}>
             <Paper elevation={3} className={cn(classes.block, classes.text)}>
                 {status.toUpperCase()}
             </Paper>
-            <Paper elevation={3} className={classes.block} />
+            <Paper elevation={3} className={classes.block}>
+                {tasksByStatus.map((task) => (
+                    <div className={classes.cardWrap} key={task?.id}>
+                        <Card task={task} />
+                    </div>
+                ))}
+            </Paper>
         </div>
     );
 };

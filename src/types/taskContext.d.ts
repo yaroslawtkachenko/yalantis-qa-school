@@ -1,8 +1,13 @@
-interface TaskContext {
+interface TaskContextInterface {
+    handleSetCurrentFilter: (currentFilter: string) => void;
+    handleDeleteTask: (taskId: string) => void;
+    handleSortTask: (sortBy: SortType) => void;
+    setFilterBy: (filterBy: string) => void;
     handleCreateTask: (task: Task) => void;
-    handleChangeStatus: (id: string, status: Status) => void;
-    handleFilterTask: (filterBy: string) => void;
-    handleSortTask: (sortBy: string) => void;
-    handleDeleteTask: (id: string) => void;
+    handleUpdateTask: (task: Task) => void;
+    handleResetState: () => void;
+    currentFilter: string;
+    filterBy: string;
+    sortBy: SortType;
     tasks: Task[];
 }

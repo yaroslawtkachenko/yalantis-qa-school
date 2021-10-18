@@ -1,6 +1,8 @@
 export enum Priority {
-    low = 'low',
-    medium = 'medium',
-    high = 'high',
-    critical = 'critical',
+    low,
+    medium,
+    high,
+    critical,
 }
+
+export const PriorityNames = ['low', 'medium', 'high', 'critical'];
